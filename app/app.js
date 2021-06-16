@@ -12,19 +12,20 @@ const wdRoutes = require("../routes/wdRoute");
 const dkRoutes = require("../routes/dkRoute");
 const emailRoutes = require("../routes/email");
 const pdfRoutes = require("../routes/pdf");
+const akunRoutes = require("../routes/akun");
 
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 axios.defaults.baseURL = "http://localhost:9000/";
-app.get("/",(req,res)=>
-res.status(200).send({
-    message : "selamat datang"
-}))
+app.get("/", (req, res) =>
+    res.status(200).send({
+        message: "selamat datang"
+    }))
 
-// app.use("/image", express.static("public/image/pengacara"));
+app.use("/image", express.static("public/image/pegawai"));
 app.use("/auth", authRoutes);
 app.use("/master", masterRoutes);
 app.use("/jfu", jfuRoutes);
@@ -34,5 +35,6 @@ app.use("/wd", wdRoutes);
 app.use("/dk", dkRoutes);
 app.use("/email", emailRoutes);
 app.use("/pdf", pdfRoutes);
+app.use("/akun", akunRoutes);
 
 module.exports = app

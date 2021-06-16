@@ -7,7 +7,7 @@ const kompren = require("./opjur/KomprenController")
 const tutup = require("./opjur/TutupController")
 const sk = require("./opjur/Sk")
 const suratMasuk = require("./SuratMasukController")
-const suratKeluar = require("./suratKeluarController")
+const suratKeluar = require("./SuratKeluarController")
 const jfu = require("./JfuController")
 const ktu = require("./KtuController")
 const ksb = require("./KsbController")
@@ -15,6 +15,7 @@ const wd = require("./WdController")
 const dk = require("./DkController")
 const email = require("./NodemailerController")
 const generatepdf = require("./CobaPdf")
+const akun = require("./AkunDetailController")
 
 const controller = {
     judul,
@@ -33,7 +34,8 @@ const controller = {
     wd,
     dk,
     email,
-    generatepdf
+    generatepdf,
+    akun
 }
 
 module.exports = controller
