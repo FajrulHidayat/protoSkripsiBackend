@@ -1,9 +1,9 @@
-const { tb_surat_keluar,tb_judul,tb_seminar_proposal,tb_seminar_hasil,tb_ujian_kompren,tb_seminar_munaqasyah } = require("../models");
+const { tb_surat_keluar, tb_judul, tb_seminar_proposal, tb_seminar_hasil, tb_ujian_kompren, tb_seminar_munaqasyah } = require("../models");
 const { Op } = require("sequelize");
 const dateFormat = require("../services/FormatDate")
 const axios = require("axios")
 class JfuController {
-  async  Pengajuan(req, res) {
+  async Pengajuan(req, res) {
     //set diagnostic
     req.start = Date.now();
     let status;
@@ -14,19 +14,19 @@ class JfuController {
     // if(req.body.password == req.body.confirmPassword)
     const item = {
       nim: req.body.nim,
-      nama:req.body.nama,
-      jurusan:req.body.jurusan,
-      tentang:req.body.tentang,
-      id_surat:req.body.id_surat,
-      pelaksana:req.body.pelaksana,
-      waktu:dateFormat(Date(Date.now()))
+      nama: req.body.nama,
+      jurusan: req.body.jurusan,
+      tentang: req.body.tentang,
+      id_surat: req.body.id_surat,
+      pelaksana: req.body.pelaksana,
+      waktu: dateFormat(Date(Date.now()))
     };
     // console.log(item)
-   
-      dtAnggota = await tb_surat_keluar.create(item);
-      status = 200;
-      message = "Berhasil Input Data"
-    
+
+    dtAnggota = await tb_surat_keluar.create(item);
+    status = 200;
+    message = "Berhasil Input Data"
+
     //get diagnostic
     let time = Date.now() - req.start;
     const used = process.memoryUsage().heapUsed / 1024 / 1024;
@@ -36,9 +36,9 @@ class JfuController {
         elapsedTime: time,
         timestamp: Date(Date.now()).toString()
       },
-      result:{
-        status:status,
-        messagae:message
+      result: {
+        status: status,
+        messagae: message
       }
     };
     return res.status(status).json(data);
@@ -49,49 +49,52 @@ class JfuController {
     let status;
     let message;
     let dtAnggota;
-    
+
     //get data
     if (req.params.id == null) {
-      dtAnggota = await tb_surat_keluar.findAll({ order: [["id", "ASC"]]
-    });
+      dtAnggota = await tb_surat_keluar.findAll({
+        order: [["id", "ASC"]]
+      });
     } else {
-      if(req.params.id === "arsip"){
+      if (req.params.id === "arsip") {
         dtAnggota = await tb_surat_keluar.findAll({
           where: {
-            [Op.not]:{
+            [Op.not]: {
               [Op.or]: [
-              {nomor: 0},
-              {ksb_acc: false },
-              {ktu_acc: false },
-              {wd_acc: false },
-              {dk_acc: false }
+                { nomor: 0 },
+                { ksb_acc: false },
+                { ktu_acc: false },
+                { wd_acc: false },
+                { dk_acc: false }
               ]
-            } },
+            }
+          },
           order: [["id", "ASC"]]
         });
-      }else if(req.params.id === "proses"){
+      } else if (req.params.id === "proses") {
         dtAnggota = await tb_surat_keluar.findAll({
           where: {
-            [Op.not]:{
+            [Op.not]: {
               [Op.or]: [
-                {nomor: 0},
-                {ksb_acc: true },
-                {ktu_acc: true },
-                {wd_acc: true },
-                {dk_acc: true }
+                { nomor: 0 },
+                { ksb_acc: true },
+                { ktu_acc: true },
+                { wd_acc: true },
+                { dk_acc: true }
               ]
-            } },
+            }
+          },
           order: [["id", "ASC"]]
         });
-      }else if(req.params.id === "baru"){
+      } else if (req.params.id === "baru") {
         dtAnggota = await tb_surat_keluar.findAll({
-          where: { 
-            
-              nomor: 0
-            },
+          where: {
+
+            nomor: 0
+          },
           order: [["id", "ASC"]]
         });
-      }else{
+      } else {
         dtAnggota = await tb_surat_keluar.findOne({
           where: { id: req.params.id },
           order: [["id", "ASC"]]
@@ -139,27 +142,27 @@ class JfuController {
     let upData;
 
     const update = {
-        nomor: req.body.nomor,
-        pelaksana: req.body.pelaksana
-      };
+      nomor: req.body.nomor,
+      pelaksana: req.body.pelaksana
+    };
     // const update = req.body.level==="ktu"?{ktu_acc:req.body.acc}:req.body.level==="ksb"?{ksb_acc:req.body.acc}:null
-      // console.log(req.params.tentang);
+    // console.log(req.params.tentang);
     if (req.params.id == null) {
       status = 403;
       message = "ID harus tercantumkan";
       id = null;
-    // } else if(!update === null){
-    //     status = 400;
-    //     message = "Bad Request";
-    //     id = null;
-    }else {
+      // } else if(!update === null){
+      //     status = 400;
+      //     message = "Bad Request";
+      //     id = null;
+    } else {
       const dtSAnggota = await tb_surat_keluar.findOne({
         where: { id: req.params.id }
       });
 
       if (!dtSAnggota) {
         status = 404;
-        message = "Data Member Tidak Ditemukan";
+        message = "Data Surat Tidak Ditemukan";
         id = null;
       } else {
         dtAnggota = await tb_surat_keluar.update(update, {
@@ -171,21 +174,21 @@ class JfuController {
         console.log(dtSAnggota.id_surat);
         switch (req.params.tentang) {
           case "Proposal":
-              upData = await tb_seminar_proposal.update({pelaksana:update.pelaksana}, {
-                where: { id: dtSAnggota.id_surat }
-              });
+            upData = await tb_seminar_proposal.update({ pelaksana: update.pelaksana }, {
+              where: { id: dtSAnggota.id_surat }
+            });
             break;
           case "Hasil":
-              upData = await tb_seminar_hasil.update({pelaksana:update.pelaksana}, {
-                where: { id: dtSAnggota.id_surat }
-              });
+            upData = await tb_seminar_hasil.update({ pelaksana: update.pelaksana }, {
+              where: { id: dtSAnggota.id_surat }
+            });
             break;
           case "Munaqasyah":
-              upData = await tb_seminar_munaqasyah.update({pelaksana:update.pelaksana}, {
-                where: { id: dtSAnggota.id_surat }
-              });
+            upData = await tb_seminar_munaqasyah.update({ pelaksana: update.pelaksana }, {
+              where: { id: dtSAnggota.id_surat }
+            });
             break;
-        
+
           default:
             break;
         }

@@ -32,6 +32,9 @@ module.exports = {
       penguji3: {
         type: Sequelize.STRING
       },
+      pelaksana: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

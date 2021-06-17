@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     sekretaris: DataTypes.STRING,
     penguji1: DataTypes.STRING,
     penguji2: DataTypes.STRING,
-    penguji3: DataTypes.STRING
+    penguji3: DataTypes.STRING,
+    pelaksana: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'tb_ujian_kompren',

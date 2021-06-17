@@ -1,7 +1,7 @@
 const { tb_ujian_kompren } = require("../../models");
 const axios = require("axios")
 class KomprenController {
-  async InsertData(req, res,next) {
+  async InsertData(req, res, next) {
     //set diagnostic
     req.start = Date.now();
     let status;
@@ -19,6 +19,7 @@ class KomprenController {
       penguji1: req.body.penguji1,
       penguji2: req.body.penguji2,
       penguji3: req.body.penguji3,
+      pelaksana: req.body.pelaksana,
     };
     console.log(item)
     const dtSAnggota = await tb_ujian_kompren.findOne({
@@ -28,32 +29,32 @@ class KomprenController {
     if (dtSAnggota) {
       status = 404;
       message = "Data Sudah Ada";
-     
+
     } else {
       dtAnggota = await tb_ujian_kompren.create(item)
-      .then(res=>id=res.id)
-      .catch(err=>console.log(err));
+        .then(res => id = res.id)
+        .catch(err => console.log(err));
       status = 200;
       message = "Berhasil Input Data"
       //permohonan
       axios
-      .post("http://localhost:9000/jfu", {
-        nim:item.nim,
-        nama:item.nama,
-        jurusan:item.jurusan,
-        tentang:"Komprehensif",
-        pelaksana:item.pelaksana,
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        .post("http://localhost:9000/jfu", {
+          nim: item.nim,
+          nama: item.nama,
+          jurusan: item.jurusan,
+          tentang: "Komprehensif",
+          pelaksana: item.pelaksana,
+          id_surat: id
+        })
+        .then(function (res) {
+          console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+          next();
+        })
+        .catch(function (err) {
+          console.log(err);
+          // res.status(err.response.status).send(err.response.data);
+        });
     }
     //get diagnostic
     let time = Date.now() - req.start;
@@ -64,9 +65,9 @@ class KomprenController {
         elapsedTime: time,
         timestamp: Date(Date.now()).toString()
       },
-      result:{
-        status:status,
-        messagae:message
+      result: {
+        status: status,
+        messagae: message
       }
     };
     return res.status(status).json(data);
@@ -133,7 +134,9 @@ class KomprenController {
       penguji1: req.body.penguji1,
       penguji2: req.body.penguji2,
       penguji3: req.body.penguji3,
-      };
+      pelaksana: req.body.pelaksana,
+
+    };
 
     if (req.params.id == null) {
       status = 403;
@@ -156,24 +159,24 @@ class KomprenController {
         message = "Sukses";
         id = dtSAnggota.id;
         //permohonan
-      axios
-      .post("http://localhost:9000/jfu", {
-        nim:update.nim,
-        nama:update.nama,
-        jurusan:update.jurusan,
-        tentang:"Komprehensif",
-        pelaksana:update.pelaksana,
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        axios
+          .post("http://localhost:9000/jfu", {
+            nim: update.nim,
+            nama: update.nama,
+            jurusan: update.jurusan,
+            tentang: "Komprehensif",
+            pelaksana: update.pelaksana,
+            id_surat: id
+          })
+          .then(function (res) {
+            console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+            next();
+          })
+          .catch(function (err) {
+            console.log(err);
+            // res.status(err.response.status).send(err.response.data);
+          });
       }
     }
 
