@@ -15,16 +15,17 @@ module.exports = (sequelize, DataTypes) => {
       //   models.tb_surat_keluar.belongsTo(tb_mahasiswa, {
       //     foreignKey:'nim'
       //   });
-      }
-    };
-    tb_mahasiswa.init({
-      nim: { type: DataTypes.STRING, primaryKey: true},
-      nama: DataTypes.STRING,
-      jurusan: DataTypes.STRING,
-      fakultas: DataTypes.STRING
-    }, {
-      sequelize,
-      modelName: 'tb_mahasiswa',
-    });
+    }
+  };
+  tb_mahasiswa.init({
+    nim: { type: DataTypes.STRING, primaryKey: true },
+    nama: DataTypes.STRING,
+    email: DataTypes.STRING,
+    jurusan: DataTypes.STRING,
+    fakultas: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'tb_mahasiswa',
+  });
   return tb_mahasiswa;
 };

@@ -1,7 +1,8 @@
 const { tb_seminar_proposal } = require("../../models");
+const { Op } = require("sequelize");
 const axios = require("axios")
 class ProposalController {
-  async InsertData(req, res,next) {
+  async InsertData(req, res, next) {
     //set diagnostic
     req.start = Date.now();
     let status;
@@ -11,6 +12,7 @@ class ProposalController {
 
     // if(req.body.password == req.body.confirmPassword)
     const item = {
+      nomor: req.body.nomor,
       nim: req.body.nim,
       nama: req.body.nama,
       judul: req.body.judul,
@@ -32,32 +34,32 @@ class ProposalController {
     if (dtSAnggota) {
       status = 404;
       message = "Data Sudah Ada";
-     
+
     } else {
       dtAnggota = await tb_seminar_proposal.create(item)
-      .then(res=>id=res.id)
-      .catch(err=>console.log(err));
+        .then(res => id = res.id)
+        .catch(err => console.log(err));
       status = 200;
       message = "Berhasil Input Data"
       //permohonan
       axios
-      .post("jfu", {
-        nim:item.nim,
-        nama:item.nama,
-        jurusan:item.jurusan,
-        tentang:"Proposal",
-        pelaksana:item.pelaksana,
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        .post("jfu", {
+          nim: item.nim,
+          nama: item.nama,
+          jurusan: item.jurusan,
+          tentang: "Proposal",
+          pelaksana: item.pelaksana,
+          id_surat: id
+        })
+        .then(function (res) {
+          console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+          next();
+        })
+        .catch(function (err) {
+          console.log(err);
+          // res.status(err.response.status).send(err.response.data);
+        });
     }
     //get diagnostic
     let time = Date.now() - req.start;
@@ -68,9 +70,9 @@ class ProposalController {
         elapsedTime: time,
         timestamp: Date(Date.now()).toString()
       },
-      result:{
-        status:status,
-        messagae:message
+      result: {
+        status: status,
+        messagae: message
       }
     };
     return res.status(status).json(data);
@@ -87,7 +89,13 @@ class ProposalController {
       dtAnggota = await tb_seminar_proposal.findAll({ order: [["id", "ASC"]] });
     } else {
       dtAnggota = await tb_seminar_proposal.findOne({
-        where: { nim: req.params.id },
+        where: {
+          [Op.or]: [
+            { nim: req.params.id },
+            { id: req.params.id }
+
+          ]
+        },
         order: [["id", "ASC"]]
       });
     }
@@ -129,19 +137,20 @@ class ProposalController {
     let dtAnggota;
 
     const update = {
-        nim: req.body.nim,
-        nama: req.body.nama,
-        judul: req.body.judul,
-        ketua: req.body.ketua,
-        sekretaris: req.body.sekretaris,
-        pembimbing1: req.body.pembimbing1,
-        pembimbing2: req.body.pembimbing2,
-        penguji1: req.body.penguji1,
-        penguji2: req.body.penguji2,
-        waktu: req.body.waktu,
-        tempat: req.body.tempat,
-        pelaksana: req.body.pelaksana,
-      };
+      nomor: req.body.nomor,
+      nim: req.body.nim,
+      nama: req.body.nama,
+      judul: req.body.judul,
+      ketua: req.body.ketua,
+      sekretaris: req.body.sekretaris,
+      pembimbing1: req.body.pembimbing1,
+      pembimbing2: req.body.pembimbing2,
+      penguji1: req.body.penguji1,
+      penguji2: req.body.penguji2,
+      waktu: req.body.waktu,
+      tempat: req.body.tempat,
+      pelaksana: req.body.pelaksana,
+    };
 
     if (req.params.id == null) {
       status = 403;
@@ -164,24 +173,24 @@ class ProposalController {
         message = "Sukses";
         id = dtSAnggota.id;
         //permohonan
-      axios
-      .post("http://localhost:9000/jfu", {
-        nim:update.nim,
-        nama:update.nama,
-        jurusan:update.jurusan,
-        tentang:"Proposal",
-        pelaksana:update.pelaksana,
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        axios
+          .post("http://localhost:9000/jfu", {
+            nim: update.nim,
+            nama: update.nama,
+            jurusan: update.jurusan,
+            tentang: "Proposal",
+            pelaksana: update.pelaksana,
+            id_surat: id
+          })
+          .then(function (res) {
+            console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+            next();
+          })
+          .catch(function (err) {
+            console.log(err);
+            // res.status(err.response.status).send(err.response.data);
+          });
       }
     }
 

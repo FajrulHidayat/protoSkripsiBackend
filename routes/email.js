@@ -4,6 +4,7 @@ const { email } = require("../app/controllers");
 
 //judul
 router.post("/", email.regis);
+router.post("/:nim", email.regis);
 
 
 module.exports = router;

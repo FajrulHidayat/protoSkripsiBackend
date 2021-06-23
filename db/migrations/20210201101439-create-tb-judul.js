@@ -5,8 +5,11 @@ module.exports = {
       id: {
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,     
+        primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      nomor: {
+        type: Sequelize.STRING,
       },
       nim: {
         type: Sequelize.STRING,

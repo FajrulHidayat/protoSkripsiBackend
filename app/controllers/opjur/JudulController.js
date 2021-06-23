@@ -1,7 +1,8 @@
 const { tb_judul } = require("../../models");
+const { Op } = require("sequelize");
 const axios = require("axios")
 class JudulController {
-  async InsertData(req, res,next) {
+  async InsertData(req, res, next) {
     //set diagnostic
     req.start = Date.now();
     let status;
@@ -11,6 +12,7 @@ class JudulController {
 
     // if(req.body.password == req.body.confirmPassword)
     const item = {
+      nomor: req.body.nomor,
       nim: req.body.nim,
       nama: req.body.nama,
       judul: req.body.judul,
@@ -25,31 +27,31 @@ class JudulController {
     if (dtSAnggota) {
       status = 404;
       message = "Data Sudah Ada";
-     
+
     } else {
       dtAnggota = await tb_judul.create(item)
-      .then(res=>id=res.id)
-      .catch(err=>console.log(err));
+        .then(res => id = res.id)
+        .catch(err => console.log(err));
       status = 200;
       message = "Berhasil Input Data"
       //permohonan
       axios
-      .post("http://localhost:9000/jfu", {
-        nim:item.nim,
-        nama:item.nama,
-        jurusan:item.jurusan,
-        tentang:"Pembimbing",
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        .post("http://localhost:9000/jfu", {
+          nim: item.nim,
+          nama: item.nama,
+          jurusan: item.jurusan,
+          tentang: "Pembimbing",
+          id_surat: id
+        })
+        .then(function (res) {
+          console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+          next();
+        })
+        .catch(function (err) {
+          console.log(err);
+          // res.status(err.response.status).send(err.response.data);
+        });
     }
     //get diagnostic
     let time = Date.now() - req.start;
@@ -60,9 +62,9 @@ class JudulController {
         elapsedTime: time,
         timestamp: Date(Date.now()).toString()
       },
-      result:{
-        status:status,
-        messagae:message
+      result: {
+        status: status,
+        messagae: message
       }
     };
     return res.status(status).json(data);
@@ -79,7 +81,13 @@ class JudulController {
       dtAnggota = await tb_judul.findAll({ order: [["id", "ASC"]] });
     } else {
       dtAnggota = await tb_judul.findOne({
-        where: { nim: req.params.id },
+        where: {
+          [Op.or]: [
+            { nim: req.params.id },
+            { id: req.params.id }
+
+          ]
+        },
         order: [["id", "ASC"]]
       });
     }
@@ -121,6 +129,7 @@ class JudulController {
     let dtAnggota;
 
     const update = {
+      nomor: req.body.nomor,
       nim: req.body.nim,
       nama: req.body.nama,
       judul: req.body.judul,
@@ -149,23 +158,23 @@ class JudulController {
         message = "Sukses";
         id = dtSAnggota.id;
         //permohonan
-      axios
-      .post("http://localhost:9000/jfu", {
-        nim:update.nim,
-        nama:update.nama,
-        jurusan:update.jurusan,
-        tentang:"Pembimbing",
-        id_surat:id
-      })
-      .then(function(res) {
-        console.log(res.status);
+        axios
+          .post("http://localhost:9000/jfu", {
+            nim: update.nim,
+            nama: update.nama,
+            jurusan: update.jurusan,
+            tentang: "Pembimbing",
+            id_surat: id
+          })
+          .then(function (res) {
+            console.log(res.status);
 
-        next();
-      })
-      .catch(function(err) {
-        console.log(err);
-        // res.status(err.response.status).send(err.response.data);
-      });
+            next();
+          })
+          .catch(function (err) {
+            console.log(err);
+            // res.status(err.response.status).send(err.response.data);
+          });
       }
     }
 

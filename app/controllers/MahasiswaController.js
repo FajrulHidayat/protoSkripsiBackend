@@ -12,6 +12,7 @@ class MahasiswaController {
     const item = {
       nim: req.body.nim,
       nama: req.body.nama,
+      email: req.body.nim + "@uin-alauddin.ac.id",
       jurusan: req.body.jurusan,
       fakultas: req.body.fakultas
     };
@@ -23,7 +24,7 @@ class MahasiswaController {
     if (dtSAnggota) {
       status = 404;
       message = "Data Sudah Ada";
-     
+
     } else {
       dtAnggota = await tb_mahasiswa.create(item);
       status = 200;
@@ -38,9 +39,9 @@ class MahasiswaController {
         elapsedTime: time,
         timestamp: Date(Date.now()).toString()
       },
-      result:{
-        status:status,
-        messagae:message
+      result: {
+        status: status,
+        messagae: message
       }
     };
     return res.status(status).json(data);
@@ -141,11 +142,12 @@ class MahasiswaController {
     let dtAnggota;
 
     const update = {
-        nim: req.body.nim,
-        nama: req.body.nama,
-        jurusan: req.body.jurusan,
-        fakultas: req.body.fakultas
-      };
+      nim: req.body.nim,
+      nama: req.body.nama,
+      email: req.body.email,
+      jurusan: req.body.jurusan,
+      fakultas: req.body.fakultas
+    };
 
     if (req.params.id == null) {
       status = 403;
@@ -153,7 +155,7 @@ class MahasiswaController {
       id = null;
     } else {
       const dtSAnggota = await tb_mahasiswa.findOne({
-        where: { id: req.params.id }
+        where: { nim: req.params.id }
       });
 
       if (!dtSAnggota) {
@@ -162,7 +164,7 @@ class MahasiswaController {
         id = null;
       } else {
         dtAnggota = await tb_mahasiswa.update(update, {
-          where: { id: req.params.id }
+          where: { nim: req.params.id }
         });
         status = 200;
         message = "Sukses";

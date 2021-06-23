@@ -14,6 +14,9 @@ module.exports = {
       nama: {
         type: Sequelize.STRING
       },
+      email: {
+        type: Sequelize.STRING
+      },
       jurusan: {
         type: Sequelize.STRING
       },

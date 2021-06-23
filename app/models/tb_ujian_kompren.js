@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   tb_ujian_kompren.init({
+    nomor: DataTypes.STRING,
     nim: DataTypes.STRING,
     nama: DataTypes.STRING,
     judul: DataTypes.STRING,

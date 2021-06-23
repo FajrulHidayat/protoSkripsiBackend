@@ -1,4 +1,5 @@
 const { tb_ujian_kompren } = require("../../models");
+const { Op } = require("sequelize");
 const axios = require("axios")
 class KomprenController {
   async InsertData(req, res, next) {
@@ -11,6 +12,7 @@ class KomprenController {
 
     // if(req.body.password == req.body.confirmPassword)
     const item = {
+      nomor: req.body.nomor,
       nim: req.body.nim,
       nama: req.body.nama,
       judul: req.body.judul,
@@ -84,7 +86,13 @@ class KomprenController {
       dtAnggota = await tb_ujian_kompren.findAll({ order: [["id", "ASC"]] });
     } else {
       dtAnggota = await tb_ujian_kompren.findOne({
-        where: { nim: req.params.id },
+        where: {
+          [Op.or]: [
+            { nim: req.params.id },
+            { id: req.params.id }
+
+          ]
+        },
         order: [["id", "ASC"]]
       });
     }
@@ -126,6 +134,7 @@ class KomprenController {
     let dtAnggota;
 
     const update = {
+      nomor: req.body.nomor,
       nim: req.body.nim,
       nama: req.body.nama,
       judul: req.body.judul,
