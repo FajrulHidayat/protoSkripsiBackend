@@ -9,8 +9,7 @@
   const development = {
     username: "fajrul",
     password: "fajrul",
-    database: "protoskripsi",
-    host: "127.0.0.1",
+    database: "protoskripsi"
     dialect: "mysql",   
     
     dialectOptions: {
