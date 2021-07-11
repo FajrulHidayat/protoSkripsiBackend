@@ -7,8 +7,8 @@
   // dialect: 'mysql'
   // }
   const development = {
-    username: "root",
-    password: "",
+    username: "fajrul",
+    password: "fajrul",
     database: "protoskripsi",
     host: "127.0.0.1",
     dialect: "mysql",   

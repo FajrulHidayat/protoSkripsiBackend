@@ -5,7 +5,7 @@ const authService = require("../services/authService");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-const upload = multer().single("pdf");
+const upload = multer().single("file");
 const resize = require("../services/resize.service");
 const nodemailer = require('nodemailer')
 const axios = require("axios")
@@ -21,7 +21,7 @@ class NodemailerController {
       let id;
       let dMahasiswa
       let data
-      console.log(req.file);
+      // console.log(req);
       if (err instanceof multer.MulterError) {
         // a multer error occurred when uploading
         console.log(err);
@@ -30,11 +30,12 @@ class NodemailerController {
         console.log(err);
         return res.status(200).json(err);
       }
-      axios
+      await axios
         .get(`http://localhost:9000/master/mahasiswa/${req.body.nim}`)
         .then(function (res) {
-          console.log(res.data.result.email);
           dMahasiswa = res.data.result.email
+
+          console.log(dMahasiswa);
           // next();
         })
         .catch(function (err) {
@@ -43,7 +44,7 @@ class NodemailerController {
         });
 
 
-      console.log("tes1");
+      // console.log("tes1");
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -51,19 +52,20 @@ class NodemailerController {
           pass: 'Crosfiremosaja1'
         }
       });
-      console.log("tes2");
+      // console.log("tes2");
       var mailOptions = {
-        to: `${dMahasiswa}`,
-        subject: 'email menggunakan nodemailer dan nodejs',
-        text: 'Wellcome to new World',
+        to: dMahasiswa,
+        // to: `fajrulknight2@gmail.com`,
+        subject: req.body.sk,
+        // text: 'Wellcome to new World',
         attachments: [{
-          filename: "filesktes.pdf",
+          filename: `${req.body.sk}.pdf`,
           content: new Buffer(req.file.buffer, '7bit')
         }]
 
       };
-      console.log("tes3");
-      console.log(mailOptions);
+      // console.log("tes3");
+      // console.log(mailOptions);
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) throw err;
         console.log('Email sent: ' + info.response);

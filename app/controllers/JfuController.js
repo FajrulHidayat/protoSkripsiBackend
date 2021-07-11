@@ -74,15 +74,24 @@ class JfuController {
       } else if (req.params.id === "proses") {
         dtAnggota = await tb_surat_keluar.findAll({
           where: {
-            [Op.not]: {
-              [Op.or]: [
-                { nomor: 0 },
-                { ksb_acc: true },
-                { ktu_acc: true },
-                { wd_acc: true },
-                { dk_acc: true }
-              ]
-            }
+            [Op.and]: [
+              {
+                [Op.not]: [
+                  { nomor: 0 }]
+              }
+              , {
+                [Op.not]: [
+                  {
+                    [Op.and]: [
+                      { ksb_acc: true },
+                      { ktu_acc: true },
+                      { wd_acc: true },
+                      { dk_acc: true }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           order: [["id", "ASC"]]
         });
