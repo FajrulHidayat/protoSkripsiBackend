@@ -19,7 +19,8 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-axios.defaults.baseURL = "http://localhost:9000/";
+// axios.defaults.baseURL = "http://localhost:9000/";
+axios.defaults.baseURL = "http://151.106.108.85:9000/";
 app.get("/", (req, res) =>
     res.status(200).send({
         message: "selamat datang"

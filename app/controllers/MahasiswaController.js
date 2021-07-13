@@ -12,7 +12,7 @@ class MahasiswaController {
     const item = {
       nim: req.body.nim,
       nama: req.body.nama,
-      email: req.body.nim + "@uin-alauddin.ac.id",
+      email: req.body.email,
       jurusan: req.body.jurusan,
       fakultas: req.body.fakultas
     };
@@ -55,11 +55,11 @@ class MahasiswaController {
 
     //get data
     if (req.params.id == null) {
-      dtAnggota = await tb_mahasiswa.findAll({ order: [["id", "ASC"]] });
+      dtAnggota = await tb_mahasiswa.findAll({ order: [["nim", "ASC"]] });
     } else {
       dtAnggota = await tb_mahasiswa.findOne({
         where: { nim: req.params.id },
-        order: [["id", "ASC"]]
+        order: [["nim", "ASC"]]
       });
     }
     if (!dtAnggota) {
